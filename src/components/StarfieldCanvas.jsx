@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 
-const STAR_COUNT = 180
+const STAR_COUNT = 300 // denser night sky
+const STAR_COLORS = ['#ffffff', '#ffd6f9', '#ffb3c1', '#ffe5f7'] // soft starlight palette
 const SHOOTING_STAR_CHANCE = 0.002 // per frame
 
 function StarfieldCanvas() {
@@ -28,9 +29,10 @@ function StarfieldCanvas() {
     const stars = Array.from({ length: STAR_COUNT }, () => ({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
-      radius: Math.random() < 0.7 ? 0.5 + Math.random() * 0.8 : 1.2 + Math.random() * 1.0,
-      twinkle: Math.random() < 0.3,
+      radius: Math.random() < 0.7 ? 0.4 + Math.random() * 0.8 : 1.1 + Math.random() * 1.0,
+      twinkle: Math.random() < 0.4,
       phase: Math.random() * Math.PI * 2,
+      color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)],
     }))
     starsRef.current = stars
 
@@ -51,16 +53,19 @@ function StarfieldCanvas() {
     }
 
     const drawStars = (c, arr, t) => {
-      c.fillStyle = '#ffffff'
       arr.forEach((s) => {
         let alpha = 1
         if (s.twinkle && !prefersReduce) {
-          alpha = 0.5 + 0.5 * Math.sin(t * 0.002 + s.phase)
+          alpha = 0.4 + 0.6 * Math.sin(t * 0.002 + s.phase)
         }
         c.globalAlpha = alpha
+        c.fillStyle = s.color
+        c.shadowBlur = 8
+        c.shadowColor = s.color
         c.beginPath()
         c.arc(s.x, s.y, s.radius, 0, Math.PI * 2)
         c.fill()
+        c.shadowBlur = 0
       })
       c.globalAlpha = 1
     }
