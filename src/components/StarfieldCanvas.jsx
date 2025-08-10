@@ -112,8 +112,9 @@ function StarfieldCanvas() {
 
   return (
     <canvas
+      id="starfield"
       ref={canvasRef}
-      style={{ position: 'fixed', inset: 0, zIndex: -1, background: 'linear-gradient(180deg,#040711 0%,#141b38 100%)' }}
+      style={{ position: 'fixed', inset: 0, zIndex: -1, background: 'linear-gradient(180deg,#2d004d 0%, #55064f 60%, #12041e 100%)' }}
     />
   )
 }

@@ -1,6 +1,8 @@
 import './App.css'
+import { useState } from 'react'
 
 import StarfieldCanvas from './components/StarfieldCanvas.jsx'
+import LoveLetter from './components/LoveLetter.jsx'
 import LetterPath from './components/LetterPath.jsx'
 import QuoteCard from './components/QuoteCard.jsx'
 import ProgressRibbon from './components/ProgressRibbon.jsx'
@@ -19,17 +21,23 @@ function App() {
     isFinished,
     actions,
   } = useAppState()
+  const [started, setStarted] = useState(false)
 
   return (
     <>
       <StarfieldCanvas />
-      <ProgressRibbon activeIndex={currentLetterIndex} completedCount={completedLetters} letters={letters} />
-      {!isFinished && <LetterPath />}
-      {showQuote && (
-        <QuoteCard quote={currentQuote?.text} onClose={actions.hideQuote} duration={isFinished ? null : undefined} />
+      {!started && <LoveLetter onStart={() => setStarted(true)} />}
+      {started && (
+        <>
+          <ProgressRibbon activeIndex={currentLetterIndex} completedCount={completedLetters} letters={letters} />
+          {!isFinished && <LetterPath />}
+          {showQuote && (
+            <QuoteCard quote={currentQuote?.text} onClose={actions.hideQuote} duration={isFinished ? null : undefined} />
+          )}
+          <HelperText text="Touch the twinkling star, my love." />
+          {isFinished && <Finale onReplay={actions.resetGame} />}
+        </>
       )}
-      <HelperText text="Touch the twinkling star, my love." />
-      {isFinished && <Finale onReplay={actions.resetGame} />}
     </>
   )
 }
